@@ -1,0 +1,33 @@
+package com.llucasreis.reviewdgs.dataloaders;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+
+import com.llucasreis.reviewdgs.dtos.ReviewDTO;
+import com.llucasreis.reviewdgs.services.ReviewService;
+import com.netflix.graphql.dgs.DgsDataLoader;
+
+import org.dataloader.MappedBatchLoader;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@DgsDataLoader(name = "reviews")
+public class ReviewDataLoader implements MappedBatchLoader<Long, List<ReviewDTO>> {
+
+  private final ReviewService reviewService;
+
+  @Autowired
+  public ReviewDataLoader(ReviewService reviewService) {
+    this.reviewService = reviewService;
+  }
+
+  @Override
+  public CompletionStage<Map<Long, List<ReviewDTO>>> load(Set<Long> gameIds) {
+    return CompletableFuture.supplyAsync(() -> 
+              this.reviewService.getReviewsByGameIds(new ArrayList<>(gameIds)));
+  }
+  
+}
