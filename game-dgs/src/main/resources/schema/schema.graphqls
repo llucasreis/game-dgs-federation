@@ -1,0 +1,9 @@
+type Game @key(fields: "id") {
+  id: ID
+  name: String
+  releaseYear: Int
+}
+
+type Query {
+  games: [Game]
+}
