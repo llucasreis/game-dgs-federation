@@ -18,7 +18,7 @@ public class ReviewDataFetcher {
 
   @DgsEntityFetcher(name = "Game")
   public Game game(Map<String, Object> values) {
-    return Game.builder().id((Long) values.get("id")).build();
+    return Game.builder().id(Long.parseLong((String)values.get("id"))).build();
   }
 
   @DgsData(parentType = "Game", field = "reviews")
