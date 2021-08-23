@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.llucasreis.reviewdgs.domain.entities.Review;
-import com.llucasreis.reviewdgs.dtos.ReviewDTO;
 import com.llucasreis.reviewdgs.repositories.ReviewRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,19 @@ public class ReviewService {
     this.reviewRepository = reviewRepository;
   }
 
-  public Map<Long, List<ReviewDTO>> getReviewsByGameIds(List<Long> gameIds) {
+  public List<Review> find() {
+    return this.reviewRepository.findAll();
+  }
+
+  public Map<Long, List<Review>> getReviewsByGameIds(List<Long> gameIds) {
     List<Review> reviews = this.reviewRepository.findByGameIdIn(gameIds);
-    Map<Long, List<ReviewDTO>> response = new HashMap<>();
+    Map<Long, List<Review>> response = new HashMap<>();
 
     gameIds.forEach(gameId -> {
-      List<ReviewDTO> reviewDTOs = reviews.stream()
+      List<Review> gameReviews = reviews.stream()
                   .filter(r -> r.getGameId().equals(gameId))
-                  .map(ReviewDTO::convert)
                   .collect(Collectors.toList());
-      response.put(gameId, reviewDTOs);
+      response.put(gameId, gameReviews);
     });
 
     return response;
