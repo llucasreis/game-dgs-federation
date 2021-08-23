@@ -1,11 +1,11 @@
 package com.llucasreis.gamedgs.datafetchers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.llucasreis.gamedgs.domain.entities.Game;
 import com.llucasreis.gamedgs.repositories.GameRepository;
-import com.netflix.graphql.dgs.DgsComponent;
-import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +22,13 @@ public class GameDataFetcher {
   @DgsQuery
   public List<Game> games() {
     return this.gameRepository.findAll();
+  }
+
+  @DgsEntityFetcher(name = "Game")
+  public Game game(Map<String, Object> values) {
+    Long id = Long.parseLong((String) values.get("id"));
+
+    return this.gameRepository.findById(id).orElse(null);
   }
 
 
