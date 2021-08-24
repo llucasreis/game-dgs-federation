@@ -5,5 +5,5 @@ type Game @key(fields: "id") {
 }
 
 type Query {
-  games: [Game]
+  games (name: String): [Game]
 }

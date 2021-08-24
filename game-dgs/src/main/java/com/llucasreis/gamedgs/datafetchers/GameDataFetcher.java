@@ -20,8 +20,11 @@ public class GameDataFetcher {
   }
 
   @DgsQuery
-  public List<Game> games() {
-    return this.gameRepository.findAll();
+  public List<Game> games(@InputArgument String name) {
+    if (name == null) {
+      return this.gameRepository.findAll();
+    }
+    return this.gameRepository.findByNameIsContainingIgnoreCase(name);
   }
 
   @DgsEntityFetcher(name = "Game")
