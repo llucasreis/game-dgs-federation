@@ -14,13 +14,13 @@ import com.netflix.graphql.dgs.DgsDataLoader;
 import org.dataloader.MappedBatchLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@DgsDataLoader(name = "reviews")
-public class ReviewDataLoader implements MappedBatchLoader<Long, List<Review>> {
+@DgsDataLoader(name = "gameReviews")
+public class ReviewByGameDataLoader implements MappedBatchLoader<Long, List<Review>> {
 
   private final ReviewService reviewService;
 
   @Autowired
-  public ReviewDataLoader(ReviewService reviewService) {
+  public ReviewByGameDataLoader(ReviewService reviewService) {
     this.reviewService = reviewService;
   }
 
