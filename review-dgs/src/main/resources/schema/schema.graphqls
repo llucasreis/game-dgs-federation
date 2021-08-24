@@ -3,11 +3,17 @@ type Game @key(fields: "id") @extends {
   reviews: [Review]
 }
 
+type User @key(fields: "id") @extends {
+  id: ID @external
+  reviews: [Review]
+}
+
 type Review @key(fields: "id") {
   id: ID
   starRating: Int
   comment: String
   game: Game
+  user: User
 }
 
 type Query {

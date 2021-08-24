@@ -26,5 +26,6 @@ public class Review {
   private Integer starRating;
   private String comment;
   private Long gameId;
+  private Long userId;
   
 }

@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
   List<Review> findByGameIdIn(List<Long> gameIds);
+  List<Review> findByUserIdIn(List<Long> userIds);
   
 }

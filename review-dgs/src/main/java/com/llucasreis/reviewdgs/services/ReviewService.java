@@ -38,5 +38,19 @@ public class ReviewService {
 
     return response;
   }
+
+  public Map<Long, List<Review>> getReviewsByUserIds(List<Long> userIds) {
+    List<Review> reviews = this.reviewRepository.findByUserIdIn(userIds);
+    Map<Long, List<Review>> response = new HashMap<>();
+
+    userIds.forEach(userId -> {
+      List<Review> userReviews = reviews.stream()
+              .filter(r -> r.getUserId().equals(userId))
+              .collect(Collectors.toList());
+      response.put(userId, userReviews);
+    });
+
+    return response;
+  }
   
 }

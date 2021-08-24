@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import com.llucasreis.reviewdgs.dataloaders.ReviewDataLoader;
+import com.llucasreis.reviewdgs.dataloaders.ReviewByUserDataLoader;
+import com.llucasreis.reviewdgs.dataloaders.ReviewByGameDataLoader;
 import com.llucasreis.reviewdgs.domain.externals.Game;
 import com.llucasreis.reviewdgs.domain.entities.Review;
+import com.llucasreis.reviewdgs.domain.externals.User;
 import com.llucasreis.reviewdgs.services.ReviewService;
 import com.netflix.graphql.dgs.*;
 
@@ -30,6 +32,13 @@ public class ReviewDataFetcher {
     return Game.builder().id(id).build();
   }
 
+  @DgsEntityFetcher(name = "User")
+  public User user(Map<String, Object> values) {
+    Long id = Long.parseLong((String) values.get("id"));
+
+    return User.builder().id(id).build();
+  }
+
   @DgsQuery
   public List<Review> reviews() {
     return this.reviewService.find();
@@ -41,13 +50,28 @@ public class ReviewDataFetcher {
     return Game.builder().id(review.getGameId()).build();
   }
 
+  @DgsData(parentType = "Review", field = "user")
+  public User user(DgsDataFetchingEnvironment dfe) {
+    Review review = dfe.getSource();
+    return User.builder().id(review.getUserId()).build();
+  }
+
   @DgsData(parentType = "Game", field = "reviews")
-  public CompletableFuture<Review> review(DgsDataFetchingEnvironment dfe) {
-    DataLoader<Long, Review> reviewDataLoader = dfe.getDataLoader(ReviewDataLoader.class);
+  public CompletableFuture<Review> reviewByGame(DgsDataFetchingEnvironment dfe) {
+    DataLoader<Long, Review> reviewByGameDataLoader = dfe.getDataLoader(ReviewByGameDataLoader.class);
 
     Game game = dfe.getSource();
 
-    return reviewDataLoader.load(game.getId());
+    return reviewByGameDataLoader.load(game.getId());
+  }
+
+  @DgsData(parentType = "User", field = "reviews")
+  public CompletableFuture<Review> reviewByUser(DgsDataFetchingEnvironment dfe) {
+    DataLoader<Long, Review> reviewByUserDataLoader = dfe.getDataLoader(ReviewByUserDataLoader.class);
+
+    User user = dfe.getSource();
+
+    return reviewByUserDataLoader.load(user.getId());
   }
 
   
